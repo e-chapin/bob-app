@@ -13,8 +13,8 @@ from app import slack_client
 def slack_interaction():
     payload = json.loads(request.form["payload"])
 
-    from pprint import pprint
-    pprint(payload)
+    # from pprint import pprint
+    # pprint(payload)
 
     # # Check to see what the user's selection was and update the message
     # selection = payload["actions"][0]["selected_options"][0]["value"]
@@ -34,7 +34,7 @@ def slack_interaction():
 
     response = slack_client.chat_postMessage(
         channel='#testbob',
-        text="```{}```".format(payload)
+        text="testing   ```{}```".format(payload)
     )
-
-    return payload
+    return "ok"
+    # return payload
