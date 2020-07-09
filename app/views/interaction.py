@@ -32,4 +32,4 @@ def slack_interaction():
     #   attachments=[]
     # )
 
-    return make_response("", 200)
+    return payload
