@@ -13,7 +13,7 @@ from app import slack_client
 def slack_interaction():
     return {
       "response_type": "ephemeral",
-      "replace_original": false,
+      "replace_original": False,
       "text": "Sorry, that didn't work. Please try again."
     }
 
