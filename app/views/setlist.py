@@ -6,7 +6,7 @@ from slack.errors import SlackApiError
 
 # local
 from app import app
-from app import client
+from app import slack_client
 from .blocks import get_setlist_reminder
 
 
