@@ -2,3 +2,4 @@ flask
 gunicorn
 slackclient
 python-dateutil
+slackeventsapi
