@@ -119,7 +119,7 @@ def get_setlist_reminder(leader='Jason'):
                         "text": "Complete?",
                         "emoji": True
                     },
-                    "value": "click_me_123"
+                    "value": "finalize_setlist_button"
                 }
             ]
         }

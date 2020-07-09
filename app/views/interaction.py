@@ -1,32 +1,23 @@
 import json
 
 # packages
-from flask import request, make_response
+from flask import request, make_response, jsonify
 from slack.errors import SlackApiError
 
 # local
 from app import app
 from app import slack_client
+from .setlist import handle_finalize_setlist
 
 
 @app.route('/slack/interactive-endpoint', methods=['POST'])
 def slack_interaction():
     payload = json.loads(request.form["payload"])
 
-    # Check to see what the user's selection was and update the message
-    selection = form_json["actions"][0]["selected_options"][0]["value"]
+    # this seems fragile
+    action = payload['actions'][0]
+    if action['type'] == 'button':
+        if action['value'] == 'finalize_setlist_button':
+            handle_finalize_setlist(payload)
 
-    if selection == "war":
-        message_text = "The only winning move is not to play.\nHow about a nice game of chess?"
-    else:
-        message_text = "response"
-
-    response = client.api_call(
-      "chat.update",
-      channel=form_json["channel"]["id"],
-      ts=form_json["message_ts"],
-      text=message_text,
-      attachments=[]
-    )
-
-    return make_response("", 200)
+    return make_response({}, 200)
