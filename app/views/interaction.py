@@ -23,8 +23,8 @@ def slack_interaction():
 
     response = client.api_call(
       "chat.update",
-      channel=form_json["channel"]["id"],
-      ts=form_json["message_ts"],
+      channel=payload["channel"]["id"],
+      ts=payload["message_ts"],
       text=message_text,
       attachments=[]
     )
