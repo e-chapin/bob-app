@@ -1,7 +1,7 @@
 import json
 
 # packages
-from flask import request, make_response
+from flask import request, make_response, jsonify
 from slack.errors import SlackApiError
 
 # local
@@ -11,11 +11,11 @@ from app import slack_client
 
 @app.route('/slack/interactive-endpoint', methods=['POST'])
 def slack_interaction():
-    return {
+    return jsonify({
       "response_type": "ephemeral",
       "replace_original": False,
       "text": "Sorry, that didn't work. Please try again."
-    }
+    })
 
 
 @app.route('/slack/get-interactive-endpoint', methods=['GET'])
