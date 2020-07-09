@@ -32,4 +32,9 @@ def slack_interaction():
     #   attachments=[]
     # )
 
+    response = slack_client.chat_postMessage(
+        channel='#testbob',
+        text="```{}```".format(payload)
+    )
+
     return payload
