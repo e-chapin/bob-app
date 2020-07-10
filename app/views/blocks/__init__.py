@@ -1,1 +1,1 @@
-from .setlist_reminder import get_setlist_reminder
+from .setlist_reminder import get_setlist_reminder, get_second_tuesday

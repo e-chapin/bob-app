@@ -2,11 +2,20 @@ import os
 import datetime
 from dateutil import relativedelta
 
+from app import pco_client
 
-def get_setlist_reminder(leader='Jason'):
+from app.helpers import pco_helper
 
-    second_sunday = datetime.datetime.now() + relativedelta.relativedelta(weekday=relativedelta.SU(2))
-    message_date = second_sunday.strftime('%Y-%m-%d')
+def get_second_tuesday():
+    return datetime.datetime.now() + relativedelta.relativedelta(weekday=relativedelta.TU(2))
+
+
+def get_setlist_reminder(leader='Jason', payload=None):
+
+    rehearsal_date = get_second_tuesday()
+    rehearsal_date_str = rehearsal_date.strftime('%Y-%m-%d')
+    type_id = pco_helper.get_online_type()
+    plan_id, song_list = pco_helper.get_songs_for_date(type_id, rehearsal_date)
 
     # this is redudent until we haave more leaders, but do this just use the leader variable
     if leader == 'Jason':
@@ -14,12 +23,24 @@ def get_setlist_reminder(leader='Jason'):
     else:
         asignee = os.environ.get('JASON_USER')
 
+    song_text = "*Songs: * \n\n"
+    for song in song_list:
+        song_text += '- {}\n'.format(song)
+
+    if payload:
+        # only refresh song list block
+        blocks = payload['message']['blocks']
+        for block in blocks:
+            if block['block_id'] == 'songs':
+                block['text']['text'] = song_text
+                return blocks
+
     block = [
         {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "Confirm setlist for two weeks from tomorrow:"
+                "text": "<@{}> Confirm setlist for <https://planningcenteronline.com/plans/{}|{}>".format(asignee, plan_id, rehearsal_date_str)
             }
         },
         {
@@ -27,7 +48,7 @@ def get_setlist_reminder(leader='Jason'):
             "elements": [
                 {
                     "type": "datepicker",
-                    "initial_date": message_date,
+                    "initial_date": rehearsal_date_str,
                     "placeholder": {
                         "type": "plain_text",
                         "text": "Select a date",
@@ -37,6 +58,7 @@ def get_setlist_reminder(leader='Jason'):
             ]
         },
         {
+            "block_id": "user_assign",
             "type": "section",
             "text": {
                 "type": "mrkdwn",
@@ -44,6 +66,7 @@ def get_setlist_reminder(leader='Jason'):
             },
             "accessory": {
                 "type": "users_select",
+                "action_id": "setlist_assigned_user",
                 "initial_user": asignee,
                 "placeholder": {
                     "type": "plain_text",
@@ -110,6 +133,14 @@ def get_setlist_reminder(leader='Jason'):
             }
         },
         {
+            "block_id": "songs",
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": song_text
+            }
+        },
+        {
             "type": "actions",
             "elements": [
                 {
@@ -120,6 +151,15 @@ def get_setlist_reminder(leader='Jason'):
                         "emoji": True
                     },
                     "value": "finalize_setlist_button"
+                },
+                {
+                    "type": "button",
+                    "text": {
+                        "type": "plain_text",
+                        "text": ":arrows_clockwise:",
+                        "emoji": True
+                    },
+                    "value": "refresh_card"
                 }
             ]
         }

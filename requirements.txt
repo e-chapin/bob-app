@@ -3,3 +3,4 @@ gunicorn
 slackclient
 python-dateutil
 slackeventsapi
+pypco
