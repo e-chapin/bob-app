@@ -25,7 +25,7 @@ def hello():
         # You will get a SlackApiError if "ok" is False
         assert e.response['ok'] is False
         assert e.response['error']  # str like 'invalid_auth', 'channel_not_found'
-        print('Got an error: {e.response['error']}')
+        print('Got an error: {e.response["error"]}')
 
     return 'Hello Slack!'
 
