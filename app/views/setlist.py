@@ -17,15 +17,15 @@ def hello():
 
     try:
         slack_client.chat_postMessage(
-            channel='#testbob',
-            text="<@UHY636GSV>: Finalize the setlist",
+            channel=os.environ.get('SLACK_CHANNEL'),
+            text='<@{}>: Finalize the setlist'.format(os.environ.get('JASON_USER')),
             blocks=get_setlist_reminder()
         )
     except SlackApiError as e:
         # You will get a SlackApiError if "ok" is False
-        assert e.response["ok"] is False
-        assert e.response["error"]  # str like 'invalid_auth', 'channel_not_found'
-        print("Got an error: {e.response['error']}")
+        assert e.response['ok'] is False
+        assert e.response['error']  # str like 'invalid_auth', 'channel_not_found'
+        print('Got an error: {e.response['error']}')
 
     return 'Hello Slack!'
 
@@ -65,7 +65,7 @@ def handle_finalize_setlist(payload):
             thread_ts=payload['message']['ts'],
             as_user=True,
             link_names=True,
-            text='<UHY636GSV> The setlist is finalized!'
+            text='<@{}> The setlist is finalized!'.format(os.environ.get('MIKE_USER'))
         )
 
     slack_client.chat_update(
