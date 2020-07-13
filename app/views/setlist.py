@@ -9,7 +9,7 @@ from app import app
 from app import slack_client
 from app import pco_client
 
-from .blocks import get_setlist_reminder, get_second_tuesday
+from .blocks import get_setlist_reminder, get_third_tuesday
 
 
 @app.route('/setlistreminder/create', methods=['GET'])
