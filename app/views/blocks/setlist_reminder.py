@@ -6,13 +6,13 @@ from app import pco_client
 
 from app.helpers import pco_helper
 
-def get_second_tuesday():
-    return datetime.datetime.now() + relativedelta.relativedelta(weekday=relativedelta.TU(2))
+def get_third_tuesday():
+    return datetime.datetime.now() + relativedelta.relativedelta(weekday=relativedelta.TU(3))
 
 
 def get_setlist_reminder(leader='Jason', payload=None):
 
-    rehearsal_date = get_second_tuesday()
+    rehearsal_date = get_third_tuesday()
     rehearsal_date_str = rehearsal_date.strftime('%Y-%m-%d')
     type_id = pco_helper.get_online_type()
     plan_id, song_list = pco_helper.get_songs_for_date(type_id, rehearsal_date)
