@@ -9,6 +9,7 @@ from app import app
 from app import slack_client
 from app import pco_client
 
+
 from .blocks import get_setlist_reminder, get_third_tuesday
 
 
@@ -32,11 +33,9 @@ def hello():
 
 def handle_setlist_refresh(payload):
     slack_client.chat_update(
-
         channel=payload['channel']['id'],
         ts=payload['message']['ts'],
-        blocks=get_setlist_reminder(payload=payload)
-
+        blocks=get_setlist_reminder(payload=payload, refresh=True)
     )
 
 

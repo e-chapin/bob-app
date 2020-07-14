@@ -46,3 +46,14 @@ def _get_items_for_plan(type_id, plan):
             song_list[-1] = '{} - {}'.format(song_list[-1], key)
 
     return song_list
+
+
+# todo fix this once the block has an ID for the datepick field 
+def get_rehearsal_date_from_block(payload):
+    blocks = payload['message']['blocks']
+    for block in blocks:
+        try:
+            if block['elements'][0]['type'] == 'datepicker':
+                return block['elements'][0]['initial_date']
+        except:
+            continue

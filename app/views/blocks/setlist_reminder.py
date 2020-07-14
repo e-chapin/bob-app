@@ -4,16 +4,22 @@ from dateutil import relativedelta
 
 from app import pco_client
 
-from app.helpers import pco_helper
+from app.helpers import pco_helper, get_rehearsal_date_from_block
+
 
 def get_third_tuesday():
     return datetime.datetime.now() + relativedelta.relativedelta(weekday=relativedelta.TU(3))
 
 
-def get_setlist_reminder(leader='Jason', payload=None):
+def get_setlist_reminder(leader='Jason', payload=None, refresh=False):
 
-    rehearsal_date = get_third_tuesday()
-    rehearsal_date_str = rehearsal_date.strftime('%Y-%m-%d')
+    if refresh:
+        rehearsal_date_str = get_rehearsal_date_from_block(payload)
+        rehearsal_date =  datetime.datetime.strptime(rehearsal_date_str, '%Y-%m-%d')
+    else:
+        rehearsal_date = get_third_tuesday()
+        rehearsal_date_str = rehearsal_date.strftime('%Y-%m-%d')
+
     type_id = pco_helper.get_online_type()
     plan_id, song_list = pco_helper.get_songs_for_date(type_id, rehearsal_date)
 
@@ -45,6 +51,7 @@ def get_setlist_reminder(leader='Jason', payload=None):
         },
         {
             "type": "actions",
+            "block_id": "datepick",
             "elements": [
                 {
                     "type": "datepicker",
